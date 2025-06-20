@@ -25,11 +25,19 @@ def get_data():
             lux = lux[-20:]
             x_base = x_base[-20:]
             dpg.set_value("temp", (x_base, temp))
+            dpg.set_value("temp_l", data[0])
             dpg.set_value("lux", (x_base, lux))
+            dpg.set_value("lux_l", data[1])
             dpg.set_axis_limits("x_axis", x_base[0], x_base[-1])
 
 
-threading.Thread(target=get_data, daemon=True).start()
+alredy_ran = False
+
+
+def run(_):
+    if not alredy_ran:
+        threading.Thread(target=get_data, daemon=True).start()
+
 
 with dpg.window(tag="main"):
     with dpg.plot(label="Value graphs", height=400, width=400):
@@ -41,6 +49,11 @@ with dpg.window(tag="main"):
         )
         dpg.add_line_series(x_base, lux, label="LUX", parent="y_axis", tag="lux")
 
+    dpg.add_button(label="connect", callback=run)
+
+    with dpg.group(horizontal=True):
+        dpg.add_text(label="[]", tag="temp_l")
+        dpg.add_text(label="[]", tag="lux_l")
 
 dpg.set_primary_window("main", True)
 dpg.setup_dearpygui()
