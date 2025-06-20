@@ -5,7 +5,7 @@ import threading
 import json
 
 dpg.create_context()
-dpg.create_viewport(title="graph", width=500, height=500)
+dpg.create_viewport(title="graph", width=700, height=700)
 
 x_base = np.arange(100, dtype=np.float32).tolist()
 temp = np.ones(100).tolist()
@@ -21,13 +21,13 @@ def get_data():
             temp.append(data[0])
             lux.append(data[1])
             x_base.append(x_base[-1] + 1)
-            temp = temp[-20:]
-            lux = lux[-20:]
-            x_base = x_base[-20:]
+            temp = temp[-50:]
+            lux = lux[-50:]
+            x_base = x_base[-50:]
             dpg.set_value("temp", (x_base, temp))
-            dpg.set_value("temp_l", data[0])
+            dpg.set_value("temp_l", f"{data[0]} C")
             dpg.set_value("lux", (x_base, lux))
-            dpg.set_value("lux_l", data[1])
+            dpg.set_value("lux_l", f"{data[1]} lux")
             dpg.set_axis_limits("x_axis", x_base[0], x_base[-1])
 
 
@@ -40,7 +40,7 @@ def run(_):
 
 
 with dpg.window(tag="main"):
-    with dpg.plot(label="Value graphs", height=400, width=400):
+    with dpg.plot(label="Value graphs", height=600, width=500):
         dpg.add_plot_legend()
         dpg.add_plot_axis(dpg.mvXAxis, label="x", tag="x_axis")
         dpg.add_plot_axis(dpg.mvYAxis, label="y", tag="y_axis")
